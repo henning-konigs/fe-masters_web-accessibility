@@ -3,10 +3,7 @@ import { IconButton } from '@chakra-ui/react';
 
 import { IconLeftArrow, IconRightArrow, IconHamburgerMenu, IconShoppingCart } from './Icons';
 
-type BannerProps = {
-	shouldAnimate?: boolean;
-};
-const Banner = ({ shouldAnimate = false }: BannerProps) => {
+const Banner = () => {
 	const slideCount = 3;
 	const [currentSlideNum, changeSlideNum] = useState<number>(1);
 	const [slidePercentage, updateSlidePercentage] = useState<number>(0);
@@ -24,23 +21,16 @@ const Banner = ({ shouldAnimate = false }: BannerProps) => {
 			changeSlideNum(1);
 		}
 	};
+
+	const setInert = (node, slideNumber) => {
+		return (
+			node && (currentSlideNum === slideNumber ? node.removeAttribute('inert', '') : node.setAttribute('inert', ''))
+		);
+	};
+
 	useEffect(() => {
 		updateSlidePercentage(((currentSlideNum - 1) / 3) * 100);
 	}, [currentSlideNum]);
-
-	async function animate() {
-		incrementSlide();
-	}
-
-	useEffect(() => {
-		if (shouldAnimate) animate();
-	}, []);
-
-	if (shouldAnimate) {
-		setTimeout(() => {
-			animate();
-		}, 3000);
-	}
 
 	return (
 		<div className="bg-black max-w-full w-full flex" id="banner" role="banner" aria-labelledby="carouselheading">
@@ -57,7 +47,7 @@ const Banner = ({ shouldAnimate = false }: BannerProps) => {
 							className={`grid list-none grid-cols-3 h-full items-center w-[300%] text-white 
                 transition-transform duration-500 ease-out`}
 							style={{ transform: `translateX(-${slidePercentage}%)` }}>
-							<li aria-hidden={currentSlideNum === 1 ? 'true' : 'false'} className="flex items-center">
+							<li ref={(node) => setInert(node, 1)} className="flex items-center">
 								<div className="text-center mx-auto">
 									<a tabIndex={currentSlideNum === 1 ? 0 : -1}>
 										<div className="text-white">
@@ -69,9 +59,7 @@ const Banner = ({ shouldAnimate = false }: BannerProps) => {
 									</a>
 								</div>
 							</li>
-							<li
-								aria-hidden={currentSlideNum === 2 ? 'true' : 'false'}
-								className="flex items-center text-white text-center">
+							<li ref={(node) => setInert(node, 2)} className="flex items-center text-white text-center">
 								<div className="text-center mx-auto">
 									<a
 										className="text-white"
@@ -86,9 +74,7 @@ const Banner = ({ shouldAnimate = false }: BannerProps) => {
 									</a>
 								</div>
 							</li>
-							<li
-								aria-hidden={currentSlideNum === 3 ? 'true' : 'false'}
-								className="flex items-center text-white text-center">
+							<li ref={(node) => setInert(node, 3)} className="flex items-center text-white text-center">
 								<div className="text-center mx-auto">
 									<a
 										className="text-white"
@@ -123,19 +109,18 @@ const Logo = () => <div className="mx-auto font-bold text-black font-serif text-
 
 type ProductHeaderProps = {
 	shoppingCartItems: any[];
-	shouldAnimate?: boolean;
 };
 
-const ProductHeader = ({ shoppingCartItems, shouldAnimate }: ProductHeaderProps) => {
+const ProductHeader = ({ shoppingCartItems }: ProductHeaderProps) => {
 	return (
 		<>
-			<Banner shouldAnimate={shouldAnimate} />
+			<Banner />
 			<header className="flex flex-row items-center py-2 max-w-[1400px] mx-auto md:min-w-[65%] lg:min-w-[70%]">
-				<IconButton aria-label="" type="button" colorScheme="white">
+				<IconButton aria-label="Menu" type="button" colorScheme="white">
 					<IconHamburgerMenu />
 				</IconButton>
 				<Logo />
-				<a href="#" className="block min-w-[40px] h-auto mt-4" aria-label="">
+				<a href="#" className="block min-w-[40px] h-auto mt-4">
 					<IconShoppingCart />
 					<span className="sr-only">
 						<p>Cart, contains {shoppingCartItems?.length === 1 ? 'item' : 'items'}</p>

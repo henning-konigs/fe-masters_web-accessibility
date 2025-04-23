@@ -47,7 +47,7 @@ const ProductDetails = ({ product, onAddToCart }: ProductDetailsProps) => {
 					<a href="#the-wall">
 						{hasReviews && (
 							<>
-								<span className="hidden">{product.overallRating}</span>
+								<span className="sr-only">{product.overallRating}</span>
 								<HStack>
 									<div>
 										<IconStarRating rating={1} />
@@ -69,6 +69,7 @@ const ProductDetails = ({ product, onAddToCart }: ProductDetailsProps) => {
 			<hr className="my-6" />
 			<div>
 				<div>
+					<h2 className="sr-only">Price:</h2>
 					<span data-id="pricing">
 						<span className="font-bold text-xl">{product.price}</span>
 					</span>
@@ -90,7 +91,7 @@ const ProductDetails = ({ product, onAddToCart }: ProductDetailsProps) => {
 							disabled={false}
 							onClick={decrementProductCount}
 							type="button"
-							aria-label=""
+							aria-label="Remove one"
 							role="button"
 							tabIndex={-1}
 							aria-disabled="true">
@@ -101,7 +102,7 @@ const ProductDetails = ({ product, onAddToCart }: ProductDetailsProps) => {
 							type="number"
 							inputMode="decimal"
 							pattern="[0-9]*(.[0-9]+)?"
-							aria-label=""
+							aria-label="Quantity"
 							value={productCount}
 							onChange={(event) => setProductCount(parseInt(event.target.value))}
 							role="spinbutton"
@@ -118,7 +119,7 @@ const ProductDetails = ({ product, onAddToCart }: ProductDetailsProps) => {
 							className="rounded-sm border-solid border-color-[#ccc] border-[1px] flex w-[32px] h-[38px] items-center text-center"
 							type="button"
 							onClick={incrementProductCount}
-							aria-label=""
+							aria-label="Add one"
 							role="button"
 							tabIndex={-1}>
 							<IconPlus className="w-[14px] h-[14px] mx-auto fill-none" />
@@ -127,14 +128,14 @@ const ProductDetails = ({ product, onAddToCart }: ProductDetailsProps) => {
 				</div>
 			</div>
 			<div className="flex flex-col mt-4 mr-4">
-				<div
+				<button
 					className="bg-black text-white font-bold py-2 mt-2 border-[1px] rounded-[100px] text-center"
 					onClick={() => onAddToCart(product)}>
 					Add to Cart
-				</div>
-				<div className="bg-white text-black font-bold py-2 mt-2 border-[1px] border-black rounded-[100px] hover:bg-black hover:text-white text-center">
+				</button>
+				<button className="bg-white text-black font-bold py-2 mt-2 border-[1px] border-black rounded-[100px] hover:bg-black hover:text-white text-center">
 					Add to Wishlist
-				</div>
+				</button>
 			</div>
 		</div>
 	);

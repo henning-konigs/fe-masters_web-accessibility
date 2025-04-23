@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Head from 'next/head';
 import { ChakraProvider, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, HStack, Text } from '@chakra-ui/react';
 
 import ProductHeader from './ProductHeader';
@@ -10,10 +11,9 @@ import type { Product } from '../types';
 
 type ProductPageProps = {
 	productData: Product;
-	shouldAnimate?: boolean;
 };
 
-const ProductPage = ({ productData, shouldAnimate = false }: ProductPageProps) => {
+const ProductPage = ({ productData }: ProductPageProps) => {
 	const [shoppingCartItems, updateShoppingCartItems] = useState<any>(null);
 	const [isFullscreenShowing, setFullscreenShowing] = useState<boolean>(false);
 
@@ -25,12 +25,17 @@ const ProductPage = ({ productData, shouldAnimate = false }: ProductPageProps) =
 	};
 	return (
 		<ChakraProvider>
+			<Head>
+				<title>
+					{productData.productTitle} by {productData.companyName} - Background
+				</title>
+			</Head>
 			<div
 				className={`bg-white border-2 border-solid border-slate-600 demo relative ${
 					isFullscreenShowing ? 'overflow-hidden max-h-screen w-100' : ''
 				}`}>
-				<ProductHeader shoppingCartItems={shoppingCartItems} shouldAnimate={shouldAnimate} />
-				<div className="text-black my-2 max-w-[1400px] mx-auto">
+				<ProductHeader shoppingCartItems={shoppingCartItems} />
+				<main className="text-black my-2 max-w-[1400px] mx-auto">
 					<HStack>
 						<Button variant="link" color="currentColor" size="sm" leftIcon={<IconBack />}>
 							&lt; Back
@@ -49,7 +54,7 @@ const ProductPage = ({ productData, shouldAnimate = false }: ProductPageProps) =
 							</BreadcrumbItem>
 						</Breadcrumb>
 					</HStack>
-					<div className="grid grid-cols-1 gap-2 md:grid-cols-6">
+					<section className="grid grid-cols-1 gap-2 md:grid-cols-6">
 						<div className="col-span-4">
 							<ProductImageGallery
 								imageData={productData.images}
@@ -60,8 +65,8 @@ const ProductPage = ({ productData, shouldAnimate = false }: ProductPageProps) =
 						<div className="col-span-2 px-4 md:px-0">
 							<ProductDetails product={productData} onAddToCart={updateShoppingCartItems} />
 						</div>
-					</div>
-				</div>
+					</section>
+				</main>
 			</div>
 		</ChakraProvider>
 	);
