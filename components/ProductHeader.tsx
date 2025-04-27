@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { IconButton } from '@chakra-ui/react';
 
 import { IconLeftArrow, IconRightArrow, IconHamburgerMenu, IconShoppingCart } from './Icons';
+import { Product } from '../types';
 
 const Banner = () => {
 	const slideCount = 3;
@@ -108,10 +109,20 @@ const Banner = () => {
 const Logo = () => <div className="mx-auto font-bold text-black font-serif text-xl">Background</div>;
 
 type ProductHeaderProps = {
-	shoppingCartItems: any[];
+	shoppingCartItems: Product[];
 };
 
 const ProductHeader = ({ shoppingCartItems }: ProductHeaderProps) => {
+	const [cartAnnouncementMessage, setCartAnnouncementMessage] = useState('');
+
+	useEffect(() => {
+		if (shoppingCartItems.length > 0) {
+			const numItems = shoppingCartItems.length === 1 ? 'item' : 'items';
+			const message = `${shoppingCartItems.length} ${numItems} in your shopping cart.`;
+			setCartAnnouncementMessage(message);
+		}
+	}, [shoppingCartItems]);
+
 	return (
 		<>
 			<Banner />
@@ -121,12 +132,20 @@ const ProductHeader = ({ shoppingCartItems }: ProductHeaderProps) => {
 				</IconButton>
 				<Logo />
 				<a href="#" className="block min-w-[40px] h-auto mt-4">
-					<IconShoppingCart />
+					<div className="relative">
+						{shoppingCartItems && shoppingCartItems.length > 0 && (
+							<span className="badge">{shoppingCartItems.length}</span>
+						)}
+						<IconShoppingCart />
+					</div>
 					<span className="sr-only">
 						<p>Cart, contains {shoppingCartItems?.length === 1 ? 'item' : 'items'}</p>
 					</span>
 				</a>
 			</header>
+			<div className="sr-only" role="alert">
+				{cartAnnouncementMessage || ''}
+			</div>
 		</>
 	);
 };

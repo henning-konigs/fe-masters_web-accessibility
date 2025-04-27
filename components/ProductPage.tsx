@@ -14,8 +14,13 @@ type ProductPageProps = {
 };
 
 const ProductPage = ({ productData }: ProductPageProps) => {
-	const [shoppingCartItems, updateShoppingCartItems] = useState<any>(null);
+	const [shoppingCartItems, updateShoppingCartItems] = useState<Product[]>([]);
 	const [isFullscreenShowing, setFullscreenShowing] = useState<boolean>(false);
+
+	const onAddToCart = (product) => {
+		const items = [...shoppingCartItems, product];
+		updateShoppingCartItems(items);
+	};
 
 	const onFullscreen = () => {
 		setFullscreenShowing(true);
@@ -63,7 +68,7 @@ const ProductPage = ({ productData }: ProductPageProps) => {
 							/>
 						</div>
 						<div className="col-span-2 px-4 md:px-0">
-							<ProductDetails product={productData} onAddToCart={updateShoppingCartItems} />
+							<ProductDetails product={productData} onAddToCart={onAddToCart} />
 						</div>
 					</section>
 				</main>
