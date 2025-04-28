@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
-import { IconButton } from '@chakra-ui/react';
+import { IconButton, usePrefersReducedMotion } from '@chakra-ui/react';
 
 import { IconLeftArrow, IconRightArrow, IconHamburgerMenu, IconShoppingCart } from './Icons';
 import { Product } from '../types';
-
-const Banner = () => {
+type BannerProps = {
+	shouldAnimate?: boolean;
+};
+const Banner = ({ shouldAnimate = true }: BannerProps) => {
 	const slideCount = 3;
 	const [currentSlideNum, changeSlideNum] = useState<number>(1);
 	const [slidePercentage, updateSlidePercentage] = useState<number>(0);
+	const userPrefersReducedMotion = usePrefersReducedMotion();
+
 	const decrementSlide = () => {
 		if (currentSlideNum > 1) {
 			changeSlideNum(currentSlideNum - 1);
@@ -32,6 +36,20 @@ const Banner = () => {
 	useEffect(() => {
 		updateSlidePercentage(((currentSlideNum - 1) / 3) * 100);
 	}, [currentSlideNum]);
+
+	const animate = () => {
+		if (!userPrefersReducedMotion) incrementSlide();
+	};
+
+	useEffect(() => {
+		if (shouldAnimate) animate();
+	}, [userPrefersReducedMotion]);
+
+	if (shouldAnimate) {
+		setTimeout(() => {
+			animate();
+		}, 3000);
+	}
 
 	return (
 		<div className="bg-black max-w-full w-full flex" id="banner" role="banner" aria-labelledby="carouselheading">
@@ -110,9 +128,10 @@ const Logo = () => <div className="mx-auto font-bold text-black font-serif text-
 
 type ProductHeaderProps = {
 	shoppingCartItems: Product[];
+	shouldAnimate: boolean;
 };
 
-const ProductHeader = ({ shoppingCartItems }: ProductHeaderProps) => {
+const ProductHeader = ({ shoppingCartItems, shouldAnimate }: ProductHeaderProps) => {
 	const [cartAnnouncementMessage, setCartAnnouncementMessage] = useState('');
 
 	useEffect(() => {
@@ -125,7 +144,7 @@ const ProductHeader = ({ shoppingCartItems }: ProductHeaderProps) => {
 
 	return (
 		<>
-			<Banner />
+			<Banner shouldAnimate={shouldAnimate} />
 			<header className="flex flex-row items-center py-2 max-w-[1400px] mx-auto md:min-w-[65%] lg:min-w-[70%]">
 				<IconButton aria-label="Menu" type="button" colorScheme="white">
 					<IconHamburgerMenu />

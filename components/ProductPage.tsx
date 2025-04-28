@@ -11,9 +11,10 @@ import type { Product } from '../types';
 
 type ProductPageProps = {
 	productData: Product;
+	shouldAnimate?: boolean;
 };
 
-const ProductPage = ({ productData }: ProductPageProps) => {
+const ProductPage = ({ productData, shouldAnimate = false }: ProductPageProps) => {
 	const [shoppingCartItems, updateShoppingCartItems] = useState<Product[]>([]);
 	const [isFullscreenShowing, setFullscreenShowing] = useState<boolean>(false);
 
@@ -39,7 +40,7 @@ const ProductPage = ({ productData }: ProductPageProps) => {
 				className={`bg-white border-2 border-solid border-slate-600 demo relative ${
 					isFullscreenShowing ? 'overflow-hidden max-h-screen w-100' : ''
 				}`}>
-				<ProductHeader shoppingCartItems={shoppingCartItems} />
+				<ProductHeader shoppingCartItems={shoppingCartItems} shouldAnimate={shouldAnimate} />
 				<main className="text-black my-2 max-w-[1400px] mx-auto">
 					<HStack>
 						<Button variant="link" color="currentColor" size="sm" leftIcon={<IconBack />}>
